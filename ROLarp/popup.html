@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROLarp</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 380px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, #0a0a0a 0%, #1c1c1c 40%, #2a2a2a 100%);
+      color: #f0f0f0;
+      padding: 20px;
+      min-height: 520px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #00d68f, #00a86b);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 214, 143, 0.3);
+    }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #fff, #ccc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Toggle */
+    .toggle-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #333;
+      transition: .25s;
+      border-radius: 26px;
+    }
+    .slider:before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: #fff;
+      transition: .25s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background: linear-gradient(90deg, #00d68f, #00b377);
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    /* Amount */
+    .amount-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    input[type="number"] {
+      flex: 1;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #00d68f;
+      box-shadow: 0 0 0 3px rgba(0, 214, 143, 0.15);
+    }
+
+    .presets {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .preset {
+      padding: 8px 4px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      color: #ddd;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .preset:hover {
+      background: rgba(0, 214, 143, 0.15);
+      border-color: #00d68f;
+      color: #fff;
+    }
+
+    /* Format select */
+    select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23aaa'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+    }
+    select:focus {
+      outline: none;
+      border-color: #00d68f;
+    }
+
+    /* Color swatches */
+    .colors {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .color-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .color-btn:hover {
+      transform: scale(1.12);
+    }
+    .color-btn.active {
+      border-color: #fff;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+    }
+
+    /* Checkboxes */
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .check-row:last-child {
+      border-bottom: none;
+    }
+
+    .check-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #00d68f;
+      cursor: pointer;
+    }
+
+    .check-row label {
+      font-size: 13.5px;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    /* Profile inputs */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .profile-grid label {
+      font-size: 12px;
+      color: #aaa;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .profile-grid input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      font-size: 14px;
+    }
+    .profile-grid input:focus {
+      outline: none;
+      border-color: #00d68f;
+    }
+
+    /* Save button */
+    #save {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #00d68f, #00b377);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 15px rgba(0, 214, 143, 0.25);
+    }
+    #save:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 214, 143, 0.35);
+    }
+    #save:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">R$</div>
+    <h1>ROLarp</h1>
+  </div>
+
+  <!-- Toggle -->
+  <div class="toggle-card">
+    <div class="toggle-label">
+      <span>🎭</span>
+      <span>Activate the LARP mode</span>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="enabled" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <!-- Robux Amount -->
+  <div class="section">
+    <div class="section-title">Robux Amount</div>
+    <div class="amount-row">
+      <input type="number" id="amount" min="0" step="1" placeholder="999999">
+    </div>
+    <div class="presets">
+      <button class="preset" data-value="1000">1K</button>
+      <button class="preset" data-value="10000">10K</button>
+      <button class="preset" data-value="100000">100K</button>
+      <button class="preset" data-value="1000000">1M</button>
+      <button class="preset" data-value="10000000">10M</button>
+    </div>
+  </div>
+
+  <!-- Format -->
+  <div class="section">
+    <div class="section-title">Display Format</div>
+    <select id="format">
+      <option value="full">1 000 000</option>
+      <option value="short">1M</option>
+      <option value="decimal">1.0M</option>
+      <option value="k">1000K</option>
+    </select>
+  </div>
+
+  <!-- Color -->
+  <div class="section">
+    <div class="section-title">Text Color</div>
+    <div class="colors">
+      <button class="color-btn active" data-color="#00d68f" style="background:#00d68f" title="Vert"></button>
+      <button class="color-btn" data-color="#ffd700" style="background:#ffd700" title="Or"></button>
+      <button class="color-btn" data-color="#ff6b9d" style="background:#ff6b9d" title="Rose"></button>
+      <button class="color-btn" data-color="#00d4ff" style="background:#00d4ff" title="Cyan"></button>
+      <button class="color-btn" data-color="#a78bfa" style="background:#a78bfa" title="Violet"></button>
+      <button class="color-btn" data-color="#ffffff" style="background:#ffffff" title="Blanc"></button>
+      <button class="color-btn" data-color="#ff4d4d" style="background:#ff4d4d" title="Rouge"></button>
+    </div>
+  </div>
+
+  <!-- Options -->
+  <div class="section">
+    <div class="section-title">Options</div>
+    <div class="check-row">
+      <input type="checkbox" id="hidePending">
+      <label for="hidePending">Masquer le solde en attente (Pending)</label>
+    </div>
+    <div class="check-row">
+      <input type="checkbox" id="animation" checked>
+      <label for="animation">Animation glow / pulse</label>
+    </div>
+  </div>
+
+  <!-- Profile LARP -->
+  <div class="section">
+    <div class="section-title">Profile LARP</div>
+    <div class="check-row" style="margin-bottom:10px">
+      <input type="checkbox" id="profileEnabled">
+      <label for="profileEnabled">Activer le fake profil</label>
+    </div>
+    <div class="profile-grid">
+      <div>
+        <label>Niveau</label>
+        <input type="number" id="fakeLevel" placeholder="75" min="1">
+      </div>
+      <div>
+        <label>Amis</label>
+        <input type="number" id="fakeFriends" placeholder="847" min="0">
+      </div>
+      <div style="grid-column: 1 / -1">
+        <label>Date de création (ex: March 2018)</label>
+        <input type="text" id="fakeJoin" placeholder="March 2018">
+      </div>
+    </div>
+  </div>
+
+  <button id="save">Save LARP Settings</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>
